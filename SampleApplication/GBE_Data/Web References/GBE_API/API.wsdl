@@ -1,0 +1,1902 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.GlobalBettingExchange.com/ExternalAPI/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="http://www.GlobalBettingExchange.com/ExternalAPI/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.GlobalBettingExchange.com/ExternalAPI/">
+      <s:complexType name="ReturnStatus">
+        <s:attribute name="Code" type="s:int" use="required" />
+        <s:attribute name="Description" type="s:string" use="required" />
+        <s:attribute name="CallId" type="s:string" use="required" />
+        <s:attribute name="ExtraInformation" type="s:string" use="optional" />
+      </s:complexType>
+      <s:complexType name="GetAccountBalancesResponse">
+        <s:annotation>
+          <s:documentation>Complex type containing basic account information such as Balance, Exposure and Available funds</s:documentation>
+        </s:annotation>
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:attribute name="Currency" type="s:string" use="required" />
+            <s:attribute name="Balance" type="s:decimal" use="required" />
+            <s:attribute name="Exposure" type="s:decimal" use="required" />
+            <s:attribute name="AvailableFunds" type="s:decimal" use="required" />
+            <s:attribute name="Credit" type="s:decimal" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="GetCurrentSelectionSequenceNumberRequest" />
+      <s:complexType name="GetCurrentSelectionSequenceNumberResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:attribute name="SelectionSequenceNumber" type="s:long" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListSelectionsChangedSinceRequest">
+        <s:attribute name="SelectionSequenceNumber" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="ListSelectionsChangedSinceResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="Selections" type="tns:ListSelectionsChangedSinceResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListSelectionsChangedSinceResponseItem">
+        <s:sequence minOccurs="0" maxOccurs="unbounded">
+          <s:element name="SettlementInformation" type="tns:SettlementInformationType" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="DisplayOrder" type="s:int" use="required" />
+        <s:attribute name="IsHidden" type="s:boolean" use="required" />
+        <s:attribute name="Status" type="s:short" use="required" />
+        <s:attribute name="ResetCount" type="s:short" use="required" />
+        <s:attribute name="WithdrawalFactor" type="s:decimal" use="required" />
+        <s:attribute name="MarketId" type="s:long" use="required" />
+        <s:attribute name="SelectionSequenceNumber" type="s:long" use="required" />
+        <s:attribute name="CancelOrdersTime" type="s:dateTime" use="optional" />
+      </s:complexType>
+      <s:complexType name="SettlementInformationType">
+        <s:attribute name="SettledTime" type="s:dateTime" use="required" />
+        <s:attribute name="VoidPercentage" type="s:decimal" use="required" />
+        <s:attribute name="LeftSideFactor" type="s:decimal" use="required" />
+        <s:attribute name="RightSideFactor" type="s:decimal" use="required" />
+        <s:attribute name="SettlementResultString" type="s:string" use="required" />
+      </s:complexType>
+      <s:complexType name="ListBootstrapOrdersRequest">
+        <s:sequence minOccurs="1" maxOccurs="1">
+          <s:element minOccurs="1" maxOccurs="1" name="SequenceNumber" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ListBootstrapOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:Order" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+            <s:attribute name="MaximumSequenceNumber" type="s:long" use="required" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Order">
+        <s:annotation>
+          <s:documentation>A type representing an Order</s:documentation>
+        </s:annotation>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="MarketId" type="s:long" use="required" />
+        <s:attribute name="SelectionId" type="s:long" use="required" />
+        <s:attribute name="SequenceNumber" type="s:long" use="required" />
+        <s:attribute name="IssuedAt" type="s:dateTime" use="required" />
+        <s:attribute name="Polarity" type="s:unsignedByte" use="required" />
+        <s:attribute name="UnmatchedStake" type="s:decimal" use="required" />
+        <s:attribute name="RequestedPrice" type="s:decimal" use="required" />
+        <s:attribute name="MatchedPrice" type="s:decimal" />
+        <s:attribute name="MatchedStake" type="s:decimal" />
+        <s:attribute name="MatchedAgainstStake" type="s:decimal" />
+        <s:attribute name="Status" type="s:unsignedByte" />
+        <s:attribute name="RestrictOrderToBroker" type="s:boolean" />
+      </s:complexType>
+      <s:complexType name="ArrayOfOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Order" nillable="true" type="tns:Order" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SimpleOrderRequest">
+        <s:annotation>
+          <s:documentation>A type representing an Order Request with no receipt</s:documentation>
+        </s:annotation>
+        <s:attribute name="SelectionId" type="s:long" use="required" />
+        <s:attribute name="Stake" type="s:decimal" use="required" />
+        <s:attribute name="Price" type="s:decimal" use="required" />
+        <s:attribute name="Polarity" type="s:unsignedByte" use="required" />
+        <s:attribute name="ExpectedSelectionResetCount" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>This value must be set to the SelectionResetCount value that is in the Selection object that is returned by GetMarketInformation and GetPrices.  The purpose of this is to ensure that you are aware of the state of the market before placing a bet.  If the ExpectedSelectionResetCount that you submit to the server is not the same as the SelectionResetCount that is on the server, then your bet will NOT be accepted, and you will get an error.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ExpectedWithdrawalSequenceNumber" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>This value should be set to the withdrawalSequenceNumber value that is in the Market object that is returned by GetMarketInformation and GetPrices.  The purpose of this is to ensure that you are aware of the state of the market before placing a bet.  If the expectedWithdrawalSequenceNumbert that you submit to the server is not the same as the withdrawalSequenceNumber that is on the server, then your bet WILL be accepted, but it will be repriced to allow for the fact that there are more or less selections available on the market than you believed.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="CancelOnInRunning" type="s:boolean" use="required">
+          <s:annotation>
+            <s:documentation>The effect of this option when set to true is to cancel any unmatched orders when the market changes to an in-running market.  This option only applies while the market is NOT in-running.  When the market turns in-running, this option will have no effect.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="CancelIfSelectionReset" type="s:boolean" use="required">
+          <s:annotation>
+            <s:documentation>The effect of this option is to cancel any unmatched bets if the selection is reset.  This can occur when the Market is reset (eg a goal is scored in an in-running market).  This defaults to true - unmatched bets will be cancelled if an event occurs in the market such that Betdaq forces the market to be reset</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ExpiresAt" type="s:dateTime" use="optional">
+          <s:annotation>
+            <s:documentation>An expires at value set in the past will cause the bet to be cancelled - although  the bet status will not immediately be set to Cancelled (this will occur in several moments on the exchange), the bet will not be available for matching.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="WithdrawlRepriceOption" type="s:unsignedByte" use="optional">
+          <s:annotation>
+            <s:documentation>Reprice(1), Cancel(2), DontReprice(3)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="KillType" type="s:unsignedByte" use="optional" />
+        <s:attribute name="FillOrKillThreshold" type="s:decimal" use="optional">
+          <s:annotation>
+            <s:documentation>This field is required only if killType is set to FillOrKill or FillOrKillDontCancel.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="RestrictOrderToBroker" type="s:boolean" use="optional">
+          <s:annotation>
+            <s:documentation>This field is required only if killType is set to FillOrKillDontCancel.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ChannelTypeInfo" type="s:string" use="optional">
+          <s:annotation>
+            <s:documentation>For internal use only</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="PunterReferenceNumber" type="s:long" />
+      </s:complexType>
+      <s:complexType name="Offer">
+        <s:annotation>
+          <s:documentation>A offer is an price, stake tuple used in the For and Against side price lists that are within a selection.</s:documentation>
+        </s:annotation>
+        <s:sequence>
+          <s:element name="Stake" type="s:decimal">
+            <s:annotation>
+              <s:documentation>The amount available for this price.</s:documentation>
+            </s:annotation>
+          </s:element>
+          <s:element name="Price">
+            <s:annotation>
+              <s:documentation>The decimal odds for this price</s:documentation>
+            </s:annotation>
+            <s:simpleType>
+              <s:restriction base="s:decimal">
+                <s:minInclusive value="1.01" />
+                <s:maxInclusive value="1000" />
+              </s:restriction>
+            </s:simpleType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BaseResponse" abstract="true">
+        <s:sequence>
+          <s:element name="ReturnStatus" type="tns:ReturnStatus" />
+          <s:element minOccurs="1" name="Timestamp" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ListOrdersChangedSinceRequest">
+        <s:sequence minOccurs="1" maxOccurs="1">
+          <s:element minOccurs="1" maxOccurs="1" name="SequenceNumber" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ListOrdersChangedSinceResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:Order" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="PlaceOrdersNoReceiptRequest">
+        <s:sequence>
+          <s:element name="Orders">
+            <s:complexType>
+              <s:sequence>
+                <s:element maxOccurs="unbounded" name="Order" type="tns:SimpleOrderRequest" />
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+          <s:element name="WantAllOrNothingBehaviour" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PlaceOrdersNoReceiptResponseItem">
+        <s:attribute name="OrderHandle" type="s:long" use="optional" />
+        <s:attribute name="ReturnCode" type="s:int" use="required" />
+        <s:attribute name="PunterReferenceNumber" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="PlaceOrdersNoReceiptResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="OrderHandles">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="OrderHandle" type="s:long" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:PlaceOrdersNoReceiptResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="PlaceOrdersWithReceiptRequest">
+        <s:sequence>
+          <s:element name="Orders">
+            <s:complexType>
+              <s:sequence>
+                <s:element maxOccurs="unbounded" name="Order" type="tns:PlaceOrdersWithReceiptRequestItem" />
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PlaceOrdersWithReceiptResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:PlaceOrdersWithReceiptResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CancelOrdersResponseItem">
+        <s:attribute name="OrderHandle" type="s:long" />
+        <s:attribute name="cancelledForSideStake" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="CancelOrdersRequest">
+        <s:sequence>
+          <s:sequence minOccurs="1" maxOccurs="unbounded">
+            <s:element name="OrderHandle" type="s:long" />
+          </s:sequence>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancelOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="CancelledOrdersHandles">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="OrderHandle" type="s:long" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:CancelOrdersResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersRequest">
+        <s:sequence />
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="CancelledOrdersHandles">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="OrderHandle" type="s:long" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:CancelAllOrdersResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="PolarityEnum">
+        <s:annotation>
+          <s:documentation>Enumeration of valid Order polarities</s:documentation>
+        </s:annotation>
+        <s:restriction base="s:string">
+          <s:enumeration value="For" />
+          <s:enumeration value="Against" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="PlaceOrdersWithReceiptResponseItem">
+        <s:attribute name="Status" type="s:unsignedByte" />
+        <s:attribute name="MatchedAgainstStake" type="s:decimal" />
+        <s:attribute name="MatchedStake" type="s:decimal" />
+        <s:attribute name="MatchedPrice" type="s:decimal" />
+        <s:attribute name="UnmatchedStake" type="s:decimal" />
+        <s:attribute name="Polarity" type="s:unsignedByte" />
+        <s:attribute name="IssuedAt" type="s:dateTime" />
+        <s:attribute name="SequenceNumber" type="s:long" />
+        <s:attribute name="SelectionId" type="s:long">
+          <s:annotation>
+            <s:documentation>Deprecated attribute.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="PunterReferenceNumber" type="s:long" />
+        <s:attribute name="OrderHandle" type="s:long" />
+      </s:complexType>
+      <s:complexType name="PlaceOrdersWithReceiptRequestItem">
+        <s:annotation>
+          <s:documentation>A type representing an Order Request with receipt</s:documentation>
+        </s:annotation>
+        <s:attribute name="SelectionId" type="s:long" use="required" />
+        <s:attribute name="Stake" type="s:decimal" use="required" />
+        <s:attribute name="Price" type="s:decimal" use="required" />
+        <s:attribute name="Polarity" type="s:unsignedByte" use="required" />
+        <s:attribute name="ExpectedSelectionResetCount" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>This value must be set to the selectionResetCount value that is in the Selection object that is returned by GetMarketInformation and GetPrices.  The purpose of this is to ensure that you are aware of the state of the market before placing a bet.  If the expectedSelectionResetCount that you submit to the server is not the same as the selectionResetCount that is on the server, then your bet will NOT be accepted, and you will get a 300 error.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ExpectedWithdrawalSequenceNumber" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>This value should be set to the withdrawalSequenceNumber value that is in the Market object that is returned by GetMarketInformation and GetPrices.  The purpose of this is to ensure that you are aware of the state of the market before placing a bet.  If the expectedWithdrawalSequenceNumbert that you submit to the server is not the same as the withdrawalSequenceNumber that is on the server, then your bet WILL be accepted, but it will be repriced to allow for the fact that there are more or less selections available on the market than you believed.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="KillType" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>FillAndKill=2, FillOrKill=3, FillOrKillDontCancel=4</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="FillOrKillThreshold" type="s:decimal" use="optional">
+          <s:annotation>
+            <s:documentation>This field is required only if killType is set to FillOrKill or FillOrKillDontCancel.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="CancelOnInRunning" type="s:boolean" use="optional">
+          <s:annotation>
+            <s:documentation>
+              The effect of this option when set to true is to cancel any unmatched bets when the market changes to an in-running market.  This option only applies while the market is NOT in-running.  When the market turns in-running, this option will have no effect.
+              This field is required only if killType is set to FillOrKillDontCancel.
+            </s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="CancelIfSelectionReset" type="s:boolean" use="optional">
+          <s:annotation>
+            <s:documentation>
+              The effect of this option is to cancel any unmatched bets if the selection is reset.  This can occur when the Market is reset (eg a goal is scored in an in-running market).  This defaults to true - unmatched bets will be cancelled if an event occurs in the market such that Betdaq forces the market to be reset
+              This field is required only if killType is set to FillOrKillDontCancel.
+            </s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="WithdrawlRepriceOption" type="s:unsignedByte" use="optional">
+          <s:annotation>
+            <s:documentation>This field is required only if killType is set to FillOrKillDontCancel. Reprice(1), Cancel(2), DontReprice(3)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ExpiresAt" type="s:dateTime" use="optional">
+          <s:annotation>
+            <s:documentation>
+              An expires at value set in the past will cause the bet to be cancelled - although the bet status will not immediately be set to Cancelled (this will occur in several moments on the exchange), the bet will not be available for matching.
+              This field is optional if killType is set to FillOrKillDontCancel, otherwise not needed at all.
+            </s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="RestrictOrderToBroker" type="s:boolean" use="optional">
+          <s:annotation>
+            <s:documentation>This field is required only if killType is set to FillOrKillDontCancel.</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="ChannelTypeInfo" type="s:string" use="optional">
+          <s:annotation>
+            <s:documentation>For internal use only</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="PunterReferenceNumber" type="s:long" />
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GetAccountBalancesRequest">
+        <s:sequence />
+      </s:complexType>
+      <s:complexType name="UpdateOrdersNoReceiptRequestItem">
+        <s:attribute name="BetId" type="s:long" />
+        <s:attribute name="DeltaStake" type="s:decimal" use="required" />
+        <s:attribute name="Price" type="s:decimal" use="required" />
+        <s:attribute name="ExpectedSelectionResetCount" type="s:unsignedByte" />
+        <s:attribute name="ExpectedWithdrawlSequenceNumber" type="s:unsignedByte" />
+      </s:complexType>
+      <s:complexType name="UpdateOrdersNoReceiptResponseItem">
+        <s:attribute name="BetId" type="s:long" />
+        <s:attribute name="ReturnCode" type="s:int" />
+      </s:complexType>
+      <s:complexType name="UpdateOrdersNoReceiptRequest">
+        <s:sequence>
+          <s:element name="Orders">
+            <s:complexType>
+              <s:sequence>
+                <s:element maxOccurs="unbounded" name="Order" type="tns:UpdateOrdersNoReceiptRequestItem" />
+              </s:sequence>
+            </s:complexType>
+          </s:element>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UpdateOrdersNoReceiptResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:UpdateOrdersNoReceiptResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListAccountPostingsRequest">
+        <s:attribute name="StartTime" type="s:dateTime" />
+        <s:attribute name="EndTime" type="s:dateTime" />
+      </s:complexType>
+      <s:complexType name="ListAccountPostingsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element name="Orders">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="Order" type="tns:ListAccountPostingsResponseItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+            <s:attribute name="Currency" type="s:string" />
+            <s:attribute name="AvailableFunds" type="s:decimal" />
+            <s:attribute name="Balance" type="s:decimal" />
+            <s:attribute name="Credit" type="s:decimal" />
+            <s:attribute name="Exposure" type="s:decimal" />
+            <s:attribute name="HaveAllPostingsBeenReturned" type="s:boolean" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListAccountPostingsResponseItem">
+        <s:sequence />
+        <s:attribute name="PostedAt" type="s:dateTime" />
+        <s:attribute name="Description" type="s:string" />
+        <s:attribute name="Amount" type="s:decimal" />
+        <s:attribute name="ResultingBalance" type="s:decimal" />
+        <s:attribute name="OrderId" type="s:long" use="optional" />
+      </s:complexType>
+      <s:complexType name="GetOrderDetailsRequest">
+        <s:attribute name="OrderId" type="s:long" />
+      </s:complexType>
+      <s:complexType name="GetOrderDetailsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="OrderSettlementInformation" type="tns:OrderSettlementInformationType" />
+              <s:element name="AuditLog">
+                <s:complexType>
+                  <s:sequence>
+                    <s:element maxOccurs="unbounded" name="AuditLog" type="tns:AuditLogItem" />
+                  </s:sequence>
+                </s:complexType>
+              </s:element>
+            </s:sequence>
+            <s:attribute name="SelectionId" type="s:long" />
+            <s:attribute name="OrderStatus" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>Unmatched(1), Matched(2), Cancelled(3), Settled(4), Void(5), Suspended(6)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+            <s:attribute name="IssuedAt" type="s:dateTime" />
+            <s:attribute name="LastChangedAt" type="s:dateTime" />
+            <s:attribute name="ExpiresAt" type="s:dateTime" />
+            <s:attribute name="ValidFrom" type="s:dateTime" />
+            <s:attribute name="RestrictOrderToBroker" type="s:boolean" />
+            <s:attribute name="OrderFillType" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>Normal(1), FillAndKill(2), FillOrKill(3), FillOrKillDontCancel(4)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+            <s:attribute name="FillOrKillThreshold" type="s:decimal" use="optional" />
+            <s:attribute name="MarketId" type="s:long" />
+            <s:attribute name="MarketStatus" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>Inactive(1), Active(2), Suspended(3), Completed(4), Settled(6), Voided(7)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+            <s:attribute name="RequestedStake" type="s:decimal" />
+            <s:attribute name="RequestedPrice" type="s:decimal" />
+            <s:attribute name="ExpectedSelectionResetCount" type="s:unsignedByte" />
+            <s:attribute name="TotalStake" type="s:decimal" />
+            <s:attribute name="UnmatchedStake" type="s:decimal" />
+            <s:attribute name="AveragePrice" type="s:decimal" />
+            <s:attribute name="MatchingTimeStamp" type="s:dateTime" />
+            <s:attribute name="Polarity" type="s:unsignedByte" />
+            <s:attribute name="WithdrawlRepriceOption" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>Reprice(1), Cancel(2), DontReprice(3)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+            <s:attribute name="CancelOnInRunning" type="s:boolean" />
+            <s:attribute name="CancelIfSelectionReset" type="s:boolean" />
+            <s:attribute name="SequenceNumber" type="s:long" />
+            <s:attribute name="MarketType" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>Win(1), Place(2), MatchOdds(3), OverUnder(4), AsianHandicap(10), TwoBall(11), ThreeBall(12), Unspecified(13), MatchMarket(14), SetMarket(15), Moneyline(16), Total(17), Handicap(18), EachWayNonHandicap(19), EachWayHandicap(20), EachWayTournament(21), RunningBall(22)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+            <s:attribute name="ExpectedWithdrawlSequenceNumber" type="s:unsignedByte" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="OrderSettlementInformationType">
+        <s:attribute name="GrossSettlementAmount" type="s:decimal" />
+        <s:attribute name="MarketCommission" type="s:decimal" />
+        <s:attribute name="MarketSettledDate" type="s:dateTime" />
+      </s:complexType>
+      <s:complexType name="AuditLogItem">
+        <s:sequence>
+          <s:element name="MatchedOrderInformation" type="tns:MatchedOrderInformationType" />
+        </s:sequence>
+        <s:attribute name="Time" type="s:dateTime" />
+        <s:attribute name="OrderActionType" type="s:unsignedByte">
+          <s:annotation>
+            <s:documentation>Placed(1), ExplicitlyUpdated(2), Matched(3), CancelledExplicitly(4), CancelledByReset(5), CancelledOnInRunning(6), Expired(7), MatchedPortionRepricedByR4(8), UnmatchedPortionRepricedByR4(9), UnmatchedPortionCancelledByWithdrawal(10), Voided(11), Settled(12), Suspended(13), Unsuspended(14)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="RequestedStake" type="s:decimal" />
+        <s:attribute name="TotalStake" type="s:decimal" />
+        <s:attribute name="TotalAgainstStake" type="s:decimal" />
+        <s:attribute name="RequestedPrice" type="s:decimal" />
+        <s:attribute name="AveragePrice" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="MatchedOrderInformationType">
+        <s:attribute name="MatchedStake" type="s:decimal" />
+        <s:attribute name="MatchedAgainstStake" type="s:decimal" />
+        <s:attribute name="PriceMatched" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="ListTopLevelEventsRequest" />
+      <s:complexType name="ListTopLevelEventsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="EventClassifiers" type="tns:EventClassifierType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="EventClassifierType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="EventClassifiers" type="tns:EventClassifierType" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Markets" type="tns:MarketType" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="DisplayOrder" type="s:short" use="required" />
+        <s:attribute name="IsEnabledForMultiples" type="s:boolean" use="required" />
+        <s:attribute name="ParentId" type="s:long" use="optional" />
+      </s:complexType>
+      <s:complexType name="GetEventSubTreeWithSelectionsRequest">
+        <s:sequence maxOccurs="unbounded">
+          <s:element name="EventClassifierIds" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GetEventSubTreeWithSelectionsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="EventClassifiers" type="tns:EventClassifierType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="GetEventSubTreeNoSelectionsRequest">
+        <s:sequence maxOccurs="unbounded">
+          <s:element name="EventClassifierIds" type="s:long" />
+        </s:sequence>
+        <s:attribute name="WantDirectDescendentsOnly" type="s:boolean" use="optional" />
+      </s:complexType>
+      <s:complexType name="GetEventSubTreeNoSelectionsResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="EventClassifiers" type="tns:EventClassifierType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="MarketType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Selections" type="tns:SelectionType" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="Type" type="s:short" use="required" />
+        <s:attribute name="Status" type="s:short" use="required">
+          <s:annotation>
+            <s:documentation>Inactive(1), Active(2), Suspended(3), Withdrawn(4), BallotedOut(9), Voided(5), Completed(6), Settled(8)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+        <s:attribute name="NumberOfWinningSelections" type="s:short" use="required" />
+        <s:attribute name="StartTime" type="s:dateTime" use="required" />
+        <s:attribute name="WithdrawalSequenceNumber" type="s:short" use="required" />
+        <s:attribute name="DisplayOrder" type="s:short" use="required" />
+        <s:attribute name="IsEnabledForMultiples" type="s:boolean" use="required" />
+        <s:attribute name="IsInRunningAllowed" type="s:boolean" use="required" />
+        <s:attribute name="IsManagedWhenInRunning" type="s:boolean" use="required" />
+        <s:attribute name="IsCurrentlyInRunning" type="s:boolean" use="required" />
+        <s:attribute name="InRunningDelaySeconds" type="s:int" use="required" />
+        <s:attribute name="EventClassifierId" type="s:long" use="optional" />
+      </s:complexType>
+      <s:complexType name="SelectionType">
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="Status" type="s:short" use="required" />
+        <s:attribute name="ResetCount" type="s:short" use="required" />
+        <s:attribute name="DeductionFactor" type="s:decimal" use="required" />
+      </s:complexType>
+      <s:complexType name="GetMarketInformationRequest">
+        <s:sequence>
+          <s:sequence minOccurs="1" maxOccurs="unbounded">
+            <s:element name="MarketIds" type="s:long" />
+          </s:sequence>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GetMarketInformationResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="Markets" type="tns:MarketType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ChangePasswordResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ChangePasswordRequest">
+        <s:attribute name="Password" type="s:string" use="required" />
+      </s:complexType>
+      <s:complexType name="ListMarketWithdrawalHistoryResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="Withdrawals" type="tns:ListMarketWithdrawalHistoryResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListMarketWithdrawalHistoryResponseItem">
+        <s:attribute name="SelectionId" type="s:long" use="required" />
+        <s:attribute name="WithdrawalTime" type="s:dateTime" use="required" />
+        <s:attribute name="SequenceNumber" type="s:short" use="required" />
+        <s:attribute name="ReductionFactor" type="s:decimal" use="required" />
+        <s:attribute name="CompoundReductionFactor" type="s:decimal" use="required" />
+      </s:complexType>
+      <s:complexType name="ListMarketWithdrawalHistoryRequest">
+        <s:attribute name="MarketId" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="GetPricesRequest">
+        <s:sequence minOccurs="1" maxOccurs="unbounded">
+          <s:element name="MarketIds" type="s:long" />
+        </s:sequence>
+        <s:attribute name="ThresholdAmount" type="s:decimal" use="required" />
+        <s:attribute name="NumberForPricesRequired" type="s:int" use="required" />
+        <s:attribute name="NumberAgainstPricesRequired" type="s:int" use="required" />
+      </s:complexType>
+      <s:complexType name="GetPricesResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence maxOccurs="unbounded">
+              <s:element name="MarketPrices" type="tns:MarketTypeWithPrices" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SelectionTypeWithPrices">
+        <s:sequence minOccurs="1" maxOccurs="unbounded">
+          <s:element name="ForSidePrices" type="tns:PricesType" />
+          <s:element name="AgainstSidePrices" type="tns:PricesType" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="Status" type="s:short" use="required" />
+        <s:attribute name="ResetCount" type="s:short" use="required" />
+        <s:attribute name="DeductionFactor" type="s:decimal" use="required" />
+      </s:complexType>
+      <s:complexType name="MarketTypeWithPrices">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Selections" type="tns:SelectionTypeWithPrices" />
+        </s:sequence>
+        <s:attribute name="Id" type="s:long" use="required" />
+        <s:attribute name="Name" type="s:string" use="required" />
+        <s:attribute name="Type" type="s:short" use="required" />
+        <s:attribute name="Status" type="s:short" use="required" />
+        <s:attribute name="NumberOfWinningSelections" type="s:short" use="required" />
+        <s:attribute name="StartTime" type="s:dateTime" use="required" />
+        <s:attribute name="WithdrawalSequenceNumber" type="s:short" use="required" />
+        <s:attribute name="DisplayOrder" type="s:short" use="required" />
+        <s:attribute name="IsEnabledForMultiples" type="s:boolean" use="required" />
+        <s:attribute name="IsInRunningAllowed" type="s:boolean" use="required" />
+        <s:attribute name="IsManagedWhenInRunning" type="s:boolean" use="required" />
+        <s:attribute name="IsCurrentlyInRunning" type="s:boolean" use="required" />
+        <s:attribute name="InRunningDelaySeconds" type="s:int" use="required" />
+        <s:attribute name="ReturnCode" type="s:int" use="optional" />
+        <s:attribute name="TotalMatchedAmount" type="s:decimal" use="optional" />
+      </s:complexType>
+      <s:complexType name="PricesType">
+        <s:attribute name="Price" type="s:decimal" use="required" />
+        <s:attribute name="Stake" type="s:decimal" use="required" />
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersOnMarketRequest">
+        <s:sequence minOccurs="1" maxOccurs="unbounded">
+          <s:element name="MarketIds" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersOnMarketResponseItem">
+        <s:attribute name="OrderHandle" type="s:long" />
+        <s:attribute name="cancelledForSideStake" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersOnMarketResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="OrderIds" type="s:long" />
+              <s:element name="Order" type="tns:CancelAllOrdersOnMarketResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CancelAllOrdersResponseItem">
+        <s:attribute name="OrderHandle" type="s:long" />
+        <s:attribute name="cancelledForSideStake" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="SuspendFromTradingRequest" />
+      <s:complexType name="SuspendFromTradingResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UnsuspendFromTradingRequest" />
+      <s:complexType name="UnsuspendFromTradingResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SuspendOrdersResponseItem">
+        <s:attribute name="OrderId" type="s:long" use="required" />
+        <s:attribute name="SuspendedForSideStake" type="s:decimal" use="required" />
+      </s:complexType>
+      <s:complexType name="SuspendOrdersRequest">
+        <s:sequence minOccurs="0" maxOccurs="unbounded">
+          <s:element name="OrderIds" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SuspendOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="Orders" type="tns:SuspendOrdersResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SuspendAllOrdersOnMarketRequest">
+        <s:attribute name="MarketId" type="s:long" />
+      </s:complexType>
+      <s:complexType name="SuspendAllOrdersOnMarketResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="Orders" type="tns:SuspendOrdersResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="UnsuspendOrdersRequest">
+        <s:sequence minOccurs="1" maxOccurs="unbounded">
+          <s:element name="OrderIds" type="s:long" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UnsuspendOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SuspendAllOrdersRequest" />
+      <s:complexType name="SuspendAllOrdersResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="Orders" type="tns:SuspendOrdersResponseItem" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ListBlacklistInformationRequest" />
+      <s:complexType name="ListBlacklistInformationResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:sequence minOccurs="0" maxOccurs="unbounded">
+              <s:element name="ApiNamesAndTimes" type="tns:ApiTimes" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ApiTimes">
+        <s:attribute name="ApiName" type="s:string" use="required" />
+        <s:attribute name="RemainingMS" type="s:int" use="required" />
+      </s:complexType>
+      <s:complexType name="RegisterHeartbeatRequest">
+        <s:attribute name="ThresholdMs" type="s:int" use="required" />
+        <s:attribute name="HeartbeatAction" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>CancelOrders(1), SuspendOrders(2), SuspendPunter(3)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+      </s:complexType>
+      <s:complexType name="RegisterHeartbeatResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ChangeHeartbeatRegistrationRequest">
+        <s:attribute name="ThresholdMs" type="s:int" use="required" />
+        <s:attribute name="HeartbeatAction" type="s:unsignedByte" use="required">
+          <s:annotation>
+            <s:documentation>CancelOrders(1), SuspendOrders(2), SuspendPunter(3)</s:documentation>
+          </s:annotation>
+        </s:attribute>
+      </s:complexType>
+      <s:complexType name="ChangeHeartbeatRegistrationResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="DeregisterHeartbeatRequest" />
+      <s:complexType name="DeregisterHeartbeatResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse" />
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="PulseRequest" />
+      <s:complexType name="PulseResponse">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:BaseResponse">
+            <s:attribute name="PerformedAt" type="s:dateTime" />
+            <s:attribute name="HeartbeatAction" type="s:unsignedByte">
+              <s:annotation>
+                <s:documentation>CancelOrders(1), SuspendOrders(2), SuspendPunter(3)</s:documentation>
+              </s:annotation>
+            </s:attribute>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ExternalApiHeader" type="tns:ExternalApiHeader" />
+      <s:complexType name="ExternalApiHeader">
+        <s:attribute name="version" type="s:decimal" use="required" />
+        <s:attribute name="languageCode" type="s:string" use="required" />
+        <s:attribute name="username" type="s:string" use="required" />
+        <s:attribute name="password" type="s:string" use="optional" />
+      </s:complexType>
+      <s:element name="ListTopLevelEvents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listTopLevelEventsRequest" type="tns:ListTopLevelEventsRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListTopLevelEventsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListTopLevelEventsResult" type="tns:ListTopLevelEventsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPrices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getPricesRequest" type="tns:GetPricesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPricesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetPricesResult" type="tns:GetPricesResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListMarketWithdrawalHistory">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listMarketWithdrawalHistoryRequest" type="tns:ListMarketWithdrawalHistoryRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListMarketWithdrawalHistoryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListMarketWithdrawalHistoryResult" type="tns:ListMarketWithdrawalHistoryResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventSubTreeWithSelections">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getEventSubTreeWithSelectionsRequest" type="tns:GetEventSubTreeWithSelectionsRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventSubTreeWithSelectionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventSubTreeWithSelectionsResult" type="tns:GetEventSubTreeWithSelectionsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListOrdersChangedSince">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listOrdersChangedSinceRequest" type="tns:ListOrdersChangedSinceRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListOrdersChangedSinceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListOrdersChangedSinceResult" type="tns:ListOrdersChangedSinceResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventSubTreeNoSelections">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getEventSubTreeNoSelectionsRequest" type="tns:GetEventSubTreeNoSelectionsRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetEventSubTreeNoSelectionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetEventSubTreeNoSelectionsResult" type="tns:GetEventSubTreeNoSelectionsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMarketInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getMarketInformationRequest" type="tns:GetMarketInformationRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMarketInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMarketInformationResult" type="tns:GetMarketInformationResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PlaceOrdersNoReceipt">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="placeOrdersNoReceiptRequest" type="tns:PlaceOrdersNoReceiptRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PlaceOrdersNoReceiptResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PlaceOrdersNoReceiptResult" type="tns:PlaceOrdersNoReceiptResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PlaceOrdersWithReceipt">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="orders" type="tns:PlaceOrdersWithReceiptRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PlaceOrdersWithReceiptResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PlaceOrdersWithReceiptResult" type="tns:PlaceOrdersWithReceiptResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cancelOrdersRequest" type="tns:CancelOrdersRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelOrdersResult" type="tns:CancelOrdersResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelAllOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cancelAllOrdersRequest" type="tns:CancelAllOrdersRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelAllOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelAllOrdersResult" type="tns:CancelAllOrdersResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelAllOrdersOnMarket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="cancelAllOrdersOnMarketRequest" type="tns:CancelAllOrdersOnMarketRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CancelAllOrdersOnMarketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelAllOrdersOnMarketResult" type="tns:CancelAllOrdersOnMarketResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountBalances">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getAccountBalancesRequest" type="tns:GetAccountBalancesRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAccountBalancesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAccountBalancesResult" type="tns:GetAccountBalancesResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListAccountPostings">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listAccountPostingsRequest" type="tns:ListAccountPostingsRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListAccountPostingsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListAccountPostingsResult" type="tns:ListAccountPostingsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateOrdersNoReceipt">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="updateOrdersNoReceiptRequest" type="tns:UpdateOrdersNoReceiptRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateOrdersNoReceiptResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateOrdersNoReceiptResult" type="tns:UpdateOrdersNoReceiptResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderDetails">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getOrderDetailsRequest" type="tns:GetOrderDetailsRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetOrderDetailsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetOrderDetailsResult" type="tns:GetOrderDetailsResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="changePasswordRequest" type="tns:ChangePasswordRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ChangePasswordResult" type="tns:ChangePasswordResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListSelectionsChangedSince">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listSelectionsChangedSinceRequest" type="tns:ListSelectionsChangedSinceRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListSelectionsChangedSinceResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListSelectionsChangedSinceResult" type="tns:ListSelectionsChangedSinceResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentSelectionSequenceNumber">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getCurrentSelectionSequenceNumberRequest" type="tns:GetCurrentSelectionSequenceNumberRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCurrentSelectionSequenceNumberResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCurrentSelectionSequenceNumberResult" type="tns:GetCurrentSelectionSequenceNumberResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListBootstrapOrders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listBootstrapOrdersRequest" type="tns:ListBootstrapOrdersRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListBootstrapOrdersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListBootstrapOrdersResult" type="tns:ListBootstrapOrdersResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListBlacklistInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="listBlacklistInformationRequest" type="tns:ListBlacklistInformationRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListBlacklistInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListBlacklistInformationResult" type="tns:ListBlacklistInformationResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterHeartbeat">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="registerHeartbeatRequest" type="tns:RegisterHeartbeatRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="RegisterHeartbeatResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RegisterHeartbeatResult" type="tns:RegisterHeartbeatResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeHeartbeatRegistration">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="changeHeartbeatRegistrationRequest" type="tns:ChangeHeartbeatRegistrationRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangeHeartbeatRegistrationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ChangeHeartbeatRegistrationResult" type="tns:ChangeHeartbeatRegistrationResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeregisterHeartbeat">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="deregisterHeartbeatRequest" type="tns:DeregisterHeartbeatRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeregisterHeartbeatResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeregisterHeartbeatResult" type="tns:DeregisterHeartbeatResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="Pulse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="pulseRequest" type="tns:PulseRequest" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PulseResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PulseResult" type="tns:PulseResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="ListSelectionsChangedSinceSoapIn">
+    <wsdl:part name="parameters" element="tns:ListSelectionsChangedSince" />
+  </wsdl:message>
+  <wsdl:message name="ListSelectionsChangedSinceSoapOut">
+    <wsdl:part name="parameters" element="tns:ListSelectionsChangedSinceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListSelectionsChangedSinceExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentSelectionSequenceNumberSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCurrentSelectionSequenceNumber" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentSelectionSequenceNumberSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCurrentSelectionSequenceNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCurrentSelectionSequenceNumberExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListBootstrapOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:ListBootstrapOrders" />
+  </wsdl:message>
+  <wsdl:message name="ListBootstrapOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:ListBootstrapOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListBootstrapOrdersExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListTopLevelEventsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListTopLevelEvents" />
+  </wsdl:message>
+  <wsdl:message name="ListTopLevelEventsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListTopLevelEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListTopLevelEventsExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeWithSelectionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventSubTreeWithSelections" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeWithSelectionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventSubTreeWithSelectionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeWithSelectionsExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListOrdersChangedSinceSoapIn">
+    <wsdl:part name="parameters" element="tns:ListOrdersChangedSince" />
+  </wsdl:message>
+  <wsdl:message name="ListOrdersChangedSinceSoapOut">
+    <wsdl:part name="parameters" element="tns:ListOrdersChangedSinceResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListOrdersChangedSinceExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeNoSelectionsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetEventSubTreeNoSelections" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeNoSelectionsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetEventSubTreeNoSelectionsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetEventSubTreeNoSelectionsExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetMarketInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMarketInformation" />
+  </wsdl:message>
+  <wsdl:message name="GetMarketInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMarketInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMarketInformationExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersNoReceiptSoapIn">
+    <wsdl:part name="parameters" element="tns:PlaceOrdersNoReceipt" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersNoReceiptSoapOut">
+    <wsdl:part name="parameters" element="tns:PlaceOrdersNoReceiptResponse" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersNoReceiptExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersWithReceiptSoapIn">
+    <wsdl:part name="parameters" element="tns:PlaceOrdersWithReceipt" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersWithReceiptSoapOut">
+    <wsdl:part name="parameters" element="tns:PlaceOrdersWithReceiptResponse" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrdersWithReceiptExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelOrders" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrdersExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelAllOrders" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelAllOrdersResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersOnMarketSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelAllOrdersOnMarket" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersOnMarketSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelAllOrdersOnMarketResponse" />
+  </wsdl:message>
+  <wsdl:message name="CancelAllOrdersOnMarketExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountBalancesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAccountBalances" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountBalancesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAccountBalancesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAccountBalancesExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListAccountPostingsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListAccountPostings" />
+  </wsdl:message>
+  <wsdl:message name="ListAccountPostingsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListAccountPostingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListAccountPostingsExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrdersNoReceiptSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateOrdersNoReceipt" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrdersNoReceiptSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateOrdersNoReceiptResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrdersNoReceiptExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderDetailsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetOrderDetails" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderDetailsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetOrderDetailsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetOrderDetailsExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangePassword" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangePasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListMarketWithdrawalHistorySoapIn">
+    <wsdl:part name="parameters" element="tns:ListMarketWithdrawalHistory" />
+  </wsdl:message>
+  <wsdl:message name="ListMarketWithdrawalHistorySoapOut">
+    <wsdl:part name="parameters" element="tns:ListMarketWithdrawalHistoryResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListMarketWithdrawalHistoryExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetPricesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPrices" />
+  </wsdl:message>
+  <wsdl:message name="GetPricesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPricesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPricesExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ListBlacklistInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:ListBlacklistInformation" />
+  </wsdl:message>
+  <wsdl:message name="ListBlacklistInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:ListBlacklistInformationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListBlacklistInformationExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="RegisterHeartbeatSoapIn">
+    <wsdl:part name="parameters" element="tns:RegisterHeartbeat" />
+  </wsdl:message>
+  <wsdl:message name="RegisterHeartbeatSoapOut">
+    <wsdl:part name="parameters" element="tns:RegisterHeartbeatResponse" />
+  </wsdl:message>
+  <wsdl:message name="RegisterHeartbeatExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="ChangeHeartbeatRegistrationSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangeHeartbeatRegistration" />
+  </wsdl:message>
+  <wsdl:message name="ChangeHeartbeatRegistrationSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangeHeartbeatRegistrationResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangeHeartbeatRegistrationExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="DeregisterHeartbeatSoapIn">
+    <wsdl:part name="parameters" element="tns:DeregisterHeartbeat" />
+  </wsdl:message>
+  <wsdl:message name="DeregisterHeartbeatSoapOut">
+    <wsdl:part name="parameters" element="tns:DeregisterHeartbeatResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeregisterHeartbeatExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:message name="PulseSoapIn">
+    <wsdl:part name="parameters" element="tns:Pulse" />
+  </wsdl:message>
+  <wsdl:message name="PulseSoapOut">
+    <wsdl:part name="parameters" element="tns:PulseResponse" />
+  </wsdl:message>
+  <wsdl:message name="PulseExternalApiHeader">
+    <wsdl:part name="ExternalApiHeader" element="tns:ExternalApiHeader" />
+  </wsdl:message>
+  <wsdl:portType name="ReadOnlyService">
+    <wsdl:operation name="ListSelectionsChangedSince">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the selections with a sequence number greater than the sequence number provided.</documentation>
+      <wsdl:input message="tns:ListSelectionsChangedSinceSoapIn" />
+      <wsdl:output message="tns:ListSelectionsChangedSinceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentSelectionSequenceNumber">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the maximum selection sequence number.</documentation>
+      <wsdl:input message="tns:GetCurrentSelectionSequenceNumberSoapIn" />
+      <wsdl:output message="tns:GetCurrentSelectionSequenceNumberSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListTopLevelEvents">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the set of top level events that are currently active.</documentation>
+      <wsdl:input message="tns:ListTopLevelEventsSoapIn" />
+      <wsdl:output message="tns:ListTopLevelEventsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubTreeWithSelections">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the tree of events and markets.</documentation>
+      <wsdl:input message="tns:GetEventSubTreeWithSelectionsSoapIn" />
+      <wsdl:output message="tns:GetEventSubTreeWithSelectionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubTreeNoSelections">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the tree of events and markets.</documentation>
+      <wsdl:input message="tns:GetEventSubTreeNoSelectionsSoapIn" />
+      <wsdl:output message="tns:GetEventSubTreeNoSelectionsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMarketInformation">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the tree of events and markets.</documentation>
+      <wsdl:input message="tns:GetMarketInformationSoapIn" />
+      <wsdl:output message="tns:GetMarketInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMarketWithdrawalHistory">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns history of withdrawals for a given market.</documentation>
+      <wsdl:input message="tns:ListMarketWithdrawalHistorySoapIn" />
+      <wsdl:output message="tns:ListMarketWithdrawalHistorySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPrices">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns the prices for the specified markets.</documentation>
+      <wsdl:input message="tns:GetPricesSoapIn" />
+      <wsdl:output message="tns:GetPricesSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SecureService">
+    <wsdl:operation name="ListBootstrapOrders">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns bootstrap orders that have a sequence number greater than the sequence number specified.</documentation>
+      <wsdl:input message="tns:ListBootstrapOrdersSoapIn" />
+      <wsdl:output message="tns:ListBootstrapOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListOrdersChangedSince">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns a list of orders that have changed since a given sequence number.</documentation>
+      <wsdl:input message="tns:ListOrdersChangedSinceSoapIn" />
+      <wsdl:output message="tns:ListOrdersChangedSinceSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrdersNoReceipt">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Places one or more orders on the exchange.</documentation>
+      <wsdl:input message="tns:PlaceOrdersNoReceiptSoapIn" />
+      <wsdl:output message="tns:PlaceOrdersNoReceiptSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrdersWithReceipt">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Places one or more orders on the exchange and waits for response from exchange.</documentation>
+      <wsdl:input message="tns:PlaceOrdersWithReceiptSoapIn" />
+      <wsdl:output message="tns:PlaceOrdersWithReceiptSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrders">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Cancels one or more orders on the exchange.</documentation>
+      <wsdl:input message="tns:CancelOrdersSoapIn" />
+      <wsdl:output message="tns:CancelOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelAllOrders">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Cancels all unmatched orders across all markets.</documentation>
+      <wsdl:input message="tns:CancelAllOrdersSoapIn" />
+      <wsdl:output message="tns:CancelAllOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelAllOrdersOnMarket">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Cancels all unmatched orders for specified markets.</documentation>
+      <wsdl:input message="tns:CancelAllOrdersOnMarketSoapIn" />
+      <wsdl:output message="tns:CancelAllOrdersOnMarketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountBalances">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns an account summary for the current punter.</documentation>
+      <wsdl:input message="tns:GetAccountBalancesSoapIn" />
+      <wsdl:output message="tns:GetAccountBalancesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListAccountPostings">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns an account summary and details of orders placed for the current punter.</documentation>
+      <wsdl:input message="tns:ListAccountPostingsSoapIn" />
+      <wsdl:output message="tns:ListAccountPostingsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrdersNoReceipt">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Updates one or more orders on the exchange without waiting for a response.</documentation>
+      <wsdl:input message="tns:UpdateOrdersNoReceiptSoapIn" />
+      <wsdl:output message="tns:UpdateOrdersNoReceiptSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderDetails">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Gets detailed information about an order.</documentation>
+      <wsdl:input message="tns:GetOrderDetailsSoapIn" />
+      <wsdl:output message="tns:GetOrderDetailsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Change password on the current account.</documentation>
+      <wsdl:input message="tns:ChangePasswordSoapIn" />
+      <wsdl:output message="tns:ChangePasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListBlacklistInformation">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">List blacklist information of the current punter.</documentation>
+      <wsdl:input message="tns:ListBlacklistInformationSoapIn" />
+      <wsdl:output message="tns:ListBlacklistInformationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="RegisterHeartbeat">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Register HeartBeat.</documentation>
+      <wsdl:input message="tns:RegisterHeartbeatSoapIn" />
+      <wsdl:output message="tns:RegisterHeartbeatSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangeHeartbeatRegistration">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Change HeartBeat registration.</documentation>
+      <wsdl:input message="tns:ChangeHeartbeatRegistrationSoapIn" />
+      <wsdl:output message="tns:ChangeHeartbeatRegistrationSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeregisterHeartbeat">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Deteles HeartBeat registration.</documentation>
+      <wsdl:input message="tns:DeregisterHeartbeatSoapIn" />
+      <wsdl:output message="tns:DeregisterHeartbeatSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Pulse">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Pulse.</documentation>
+      <wsdl:input message="tns:PulseSoapIn" />
+      <wsdl:output message="tns:PulseSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ReadOnlyService" type="tns:ReadOnlyService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="ListTopLevelEvents">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListTopLevelEvents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListTopLevelEventsExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubTreeWithSelections">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetEventSubTreeWithSelections" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetEventSubTreeWithSelectionsExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetEventSubTreeNoSelections">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetEventSubTreeNoSelections" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetEventSubTreeNoSelectionsExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMarketInformation">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetMarketInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMarketInformationExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMarketWithdrawalHistory">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListMarketWithdrawalHistory" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListMarketWithdrawalHistoryExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPrices">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetPrices" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPricesExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListSelectionsChangedSince">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListSelectionsChangedSince" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListSelectionsChangedSinceExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCurrentSelectionSequenceNumber">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetCurrentSelectionSequenceNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetCurrentSelectionSequenceNumberExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SecureService" type="tns:SecureService">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="ListOrdersChangedSince">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListOrdersChangedSince" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListOrdersChangedSinceExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrdersNoReceipt">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/PlaceOrdersNoReceipt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PlaceOrdersNoReceiptExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PlaceOrdersWithReceipt">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/PlaceOrdersWithReceipt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PlaceOrdersWithReceiptExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrders">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/CancelOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelOrdersExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelAllOrders">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/CancelAllOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelAllOrdersExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelAllOrdersOnMarket">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/CancelAllOrdersOnMarket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CancelAllOrdersOnMarketExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAccountBalances">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetAccountBalances" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetAccountBalancesExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListAccountPostings">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListAccountPostings" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListAccountPostingsExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrdersNoReceipt">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/UpdateOrdersNoReceipt" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:UpdateOrdersNoReceiptExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetOrderDetails">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/GetOrderDetails" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetOrderDetailsExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ChangePassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ChangePasswordExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListBootstrapOrders">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListBootstrapOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListBootstrapOrdersExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListBlacklistInformation">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ListBlacklistInformation" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListBlacklistInformationExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RegisterHeartbeat">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/RegisterHeartbeat" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:RegisterHeartbeatExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangeHeartbeatRegistration">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/ChangeHeartbeatRegistration" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ChangeHeartbeatRegistrationExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeregisterHeartbeat">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/DeregisterHeartbeat" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeregisterHeartbeatExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Pulse">
+      <soap:operation soapAction="http://www.GlobalBettingExchange.com/ExternalAPI/Pulse" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PulseExternalApiHeader" part="ExternalApiHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ReadOnlyService">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="ReadOnlyService" binding="tns:ReadOnlyService">
+      <soap:address location="http://api.betdaq.com/v2.0/ReadOnlyService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+  <wsdl:service name="SecureService">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="SecureService" binding="tns:SecureService">
+      <soap:address location="https://api.betdaq.com/v2.0/Secure/SecureService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
